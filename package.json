@@ -1,0 +1,18 @@
+{
+  "name": "higher-order-functions",
+  "version": "0.0.1",
+  "description": "A collection of higher order functions and other functional helpers as they are common in pure functional languages.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel/register",
+    "build": "babel --stage 0 -d lib/ src/",
+    "prepublish": "npm run build"
+  },
+  "author": "Paul 'opatut' Bienkowski <npm@opatut.de>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "chai": "^3.2.0",
+    "mocha": "^2.3.0"
+  }
+}
