@@ -1,6 +1,9 @@
 import { assert } from 'chai';
 
+import operatorTests from './operators';
+
 import * as H from '../src';
+
 
 let test1 = Symbol('test-1');
 let test2 = Symbol('test-2');
@@ -272,12 +275,65 @@ describe('zip()', () => {
 });
 
 describe('map()', () => {
-    // TODO
+    it('should be a function', () => {
+        assert.typeOf(H.map, 'function');
+    });
+
+    it('should work with a single array', () => {
+        let a = [1,2,3];
+        let b = [2,3,4];
+        assert.deepEqual(H.map(inc, a), b);
+    });
+
+    it('should work with multiple arrays', () => {
+        let a = ['hello', 'world'];
+        assert.deepEqual(H.map(join, a, a), ['hellohello', 'worldworld']);
+    });
 });
 
-describe('is()', () => {
-    // TODO
+describe('eq()', () => {
+    it('should be an alias for eq2', () => {
+        assert.equal(H.eq, H.eq2);
+    });
 });
+
+let eqTestSets = [
+    ['a', 'a'],
+    [10, 10],
+    [test1, test2],
+    [test1, test1],
+    [{}, {}],
+    [null, undefined],
+    [undefined, undefined],
+    [undefined, ''],
+    [false, 0],
+    [true, 0]
+];
+
+describe('eq2()', () => {
+    it('should be a function', () => {
+        assert.typeOf(H.eq2, 'function');
+    });
+
+    it('should work like ==', () => {
+        for (let set of eqTestSets) {
+            assert.equal(H.eq2(set[0], set[1]), set[0] == set[1]);
+        }
+    });
+});
+
+describe('eq3()', () => {
+    it('should be a function', () => {
+        assert.typeOf(H.eq3, 'function');
+    });
+
+    it('should work like ===', () => {
+        for (let set of eqTestSets) {
+            assert.equal(H.eq3(set[0], set[1]), set[0] == set[1]);
+        }
+    });
+});
+
 
 describe('not()', () => {
     // TODO

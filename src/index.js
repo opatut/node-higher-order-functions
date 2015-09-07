@@ -1,5 +1,10 @@
 import assert from 'assert';
 
+export * from './operators';
+
+import { not } from './operators';
+
+
 // Create a function that returns a constant.
 export function constant (value) {
     return () => value;
@@ -102,30 +107,27 @@ export function zip(...lists) {
 // Call the function with one argument from each list, until at least one list
 // is empty. Return a list of the function call return values, in order.
 export function map(fn, ...lists) {
-    return zip(...lists).map(compose(apply, fn));
+    return zip(...lists).map(curry(apply, fn));
 }
 
-// With one argument: returns a function that compares its input with the argument.
-// With no arguments: returns a function that compares its two inputs.
-// With two arguments: compares the arguments with `==`.
-export function is(...args) {
-    assert(args.length <= 2);
+export function eq2(a, b) {
+    return a == b;
+}
 
-    if (args.length == 2) {
-        return args[0] == args[1];
-    } else if (args.length == 1) {
-        return x => is(args[0], x);
-    } else if (args.length == 0) {
-        return (x, y) => is(x, y);
-    }
+export function eq3(a, b) {
+    return a === b;
+}
+
+export let eq = eq2;
+
+export function is(arg1, fn=eq) {
+    return curry(fn, arg1);
 }
 
 // Wraps a function in a logical not. Returns a function that returns true
 // for any set of arguments, if the passed function returns a falsey value
 // for this set of arguments, and vice versa.
-export function not(fn) {
-    return (...args) => !fn(...args);
-}
+export let complement = curry(compose, not);
 
 // Returns true if the function returns a truthy value for any set of arguments. Can be
 // called with multiple lists, behaves like map().
@@ -174,23 +176,3 @@ export function orFns(...fns) {
     }
 }
 
-
-export function add (...args) {
-    return reduce((a, b) => a + b, args);
-}
-
-export function sub (...args) {
-    return reduce((a, b) => a - b, args);
-}
-
-export function mul (...args) {
-    return reduce((a, b) => a * b, args);
-}
-
-export function div (...args) {
-    return reduce((a, b) => a / b, args);
-}
-
-export function modulo (...args) {
-    return reduce((a, b) => (a + b) % b, args);
-}
