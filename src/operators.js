@@ -1,7 +1,9 @@
-import { reduce } from './index';
+import { reduce, filter } from './lists';
+import { curry } from './functional';
 
 // Unary
 
+export let identity = (x) => x;
 export let not = (x) => !x;
 export let neg = (x) => -x;
 
@@ -27,3 +29,34 @@ export let subN = toVariadic(sub);
 export let mulN = toVariadic(mul);
 export let divN = toVariadic(div);
 export let moduloN = toVariadic(modulo);
+
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+export function min(...items) {
+    return reduce(filter(items, isNumeric), (a, b) => a < b ? a : b);
+}
+
+export function max(...items) {
+    return reduce(filter(items, isNumeric), (a, b) => a > b ? a : b);
+}
+
+// Returns the length attribute of any array-like object.
+export let length = (x) => x.length;
+
+
+export function eq2(a, b) {
+    return a == b;
+}
+
+export function eq3(a, b) {
+    return a === b;
+}
+
+export let eq = eq2;
+
+export function is(arg1, fn=eq) {
+    return curry(fn, arg1);
+}
+
